@@ -1,0 +1,32 @@
+---
+- name: Create group {{ user }}
+  group: name={{ user }} system=yes
+
+- name: Create user {{ user }}
+  user:
+    name: "{{ user }}"
+    group: "{{ user }}"
+    system: yes
+
+- name: Create celery log directory
+  file:
+    name: "/var/log/celery"
+    state: directory
+
+- name: Create celery {{ instance_name }} log file
+  command: >
+    touch /var/log/celery/{{ instance_name }}.log
+    creates=/var/log/celery/{{ instance_name }}.log
+
+- name: Ensure /var/log/celery/{{ instance_name }}.log has correct permissions
+  file:
+    name: /var/log/celery/{{ instance_name }}.log
+    owner: "{{ user }}"
+    group: "{{ user }}"
+
+- name: Configure supervisor
+  template:
+    src: supervisor.conf
+    dest: /etc/supervisor/conf.d/celery-{{ instance_name }}.conf
+  notify:
+  - Restart celery {{ instance_name }}
