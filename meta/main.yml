@@ -1,4 +1,6 @@
 ---
+dependencies: []
+
 allow_duplicates: yes
 
 galaxy_info:
@@ -9,5 +11,3 @@ galaxy_info:
   - name: Debian
     versions:
     - jessie
-
-dependencies: {}
